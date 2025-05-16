@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Product - Steal Store Admin{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Add New Product</h1>
+        </div>
+        
+        <div class="admin-form">
+            <form method="POST" action="{{ url_for('admin_add_product') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Price ($)</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="footwear">Footwear</option>
+                            <option value="electronics">Electronics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" id="stock" name="stock" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Image URL</label>
+                    <input type="text" id="image" name="image" required>
+                    <small class="form-hint">In a real app, you would upload an image here</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn secondary-btn" onclick="window.location.href='{{ url_for('admin_products') }}'">Cancel</button>
+                    <button type="submit" class="btn primary-btn">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

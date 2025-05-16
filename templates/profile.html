@@ -1,0 +1,678 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Steal Store{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+        </div>
+        
+        <div class="profile-content">
+            <div class="user-info">
+                <h2>Account Information</h2>
+                <div class="user-details">
+                    <div class="detail-group">
+                        <h3>Name</h3>
+                        <div class="detail-value">
+                            {{ session.user.name }}
+                            <button class="edit-btn" id="editNameBtn" title="Edit Name">
+                                <span class="material-icons">edit</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="detail-group">
+                        <h3>Email</h3>
+                        <div class="detail-value">{{ session.user.email }}</div>
+                    </div>
+                    <div class="detail-group">
+                        <h3>Member Since</h3>
+                        <div class="detail-value">{{ session.user.created_at|date }}</div>
+                    </div>
+                    <div class="detail-group">
+                        <h3>Default Shipping Address</h3>
+                        <div class="detail-value">
+                            {% if session.user.address %}
+                                {{ session.user.address.full_name }}<br>
+                                {{ session.user.address.address }}<br>
+                                {{ session.user.address.city }}, {{ session.user.address.country }}<br>
+                                {{ session.user.address.phone }}
+                                <button class="edit-btn" id="editAddressBtn" title="Edit Address">
+                                    <span class="material-icons">edit</span>
+                                </button>
+                            {% else %}
+                                <span class="muted-text">No saved address</span>
+                                <button class="add-btn" id="addAddressBtn" title="Add Address">
+                                    <span class="material-icons">add</span>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-history">
+                <h2>Order History</h2>
+                
+                {% if orders %}
+                    <div class="order-tabs">
+                        <button class="tab-btn active" data-tab="all">All Orders</button>
+                        <button class="tab-btn" data-tab="pending">Pending</button>
+                        <button class="tab-btn" data-tab="processing">Processing</button>
+                        <button class="tab-btn" data-tab="shipped">Shipped</button>
+                        <button class="tab-btn" data-tab="delivered">Delivered</button>
+                    </div>
+                    
+                    <div class="orders-container">
+                        {% for order in orders %}
+                            <div class="order-card" data-status="{{ order.status }}">
+                                <div class="order-header">
+                                    <div class="order-id">Order #{{ order.id[:8] }}</div>
+                                    <div class="order-date">{{ order.created_at }}</div>
+                                </div>
+                                
+                                <div class="order-details">
+                                    <span class="order-status {{ order.status }}">{{ order.status }}</span>
+                                    
+                                    <div class="order-items">
+                                        {% for item in order.items %}
+                                            <div class="order-item">
+                                                <div class="order-item-image">
+                                                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                                                </div>
+                                                <div class="order-item-details">
+                                                    <h4>{{ item.name }}</h4>
+                                                    <div class="order-item-meta">
+                                                        <span class="order-item-price">${{ "%.2f"|format(item.price) }}</span>
+                                                        <span class="order-item-quantity">Quantity: {{ item.quantity }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="order-item-total">
+                                                    ${{ "%.2f"|format(item.price * item.quantity) }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="order-total">
+                                        Total: ${{ "%.2f"|format(order.total) }}
+                                    </div>
+                                    
+                                    {% if order.status == 'shipped' %}
+                                        <div class="order-tracking">
+                                            <h4>Track Your Order</h4>
+                                            <div class="tracking-steps">
+                                                <div class="tracking-step completed">
+                                                    <div class="step-icon">
+                                                        <span class="material-icons">inventory</span>
+                                                    </div>
+                                                    <div class="step-label">Order Placed</div>
+                                                </div>
+                                                <div class="tracking-step completed">
+                                                    <div class="step-icon">
+                                                        <span class="material-icons">inventory_2</span>
+                                                    </div>
+                                                    <div class="step-label">Processing</div>
+                                                </div>
+                                                <div class="tracking-step active">
+                                                    <div class="step-icon">
+                                                        <span class="material-icons">local_shipping</span>
+                                                    </div>
+                                                    <div class="step-label">Shipped</div>
+                                                </div>
+                                                <div class="tracking-step">
+                                                    <div class="step-icon">
+                                                        <span class="material-icons">home</span>
+                                                    </div>
+                                                    <div class="step-label">Delivered</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-orders">
+                        <p>You haven't placed any orders yet.</p>
+                        <a href="{{ url_for('products') }}" class="btn primary-btn">Start Shopping</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Edit Name Modal -->
+<div id="editNameModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Name</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editNameForm" action="{{ url_for('update_profile') }}" method="POST">
+                <input type="hidden" name="update_type" value="name">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="{{ session.user.name }}" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-btn cancel-edit">Cancel</button>
+                    <button type="submit" class="btn primary-btn save-name">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Address Modal -->
+<div id="editAddressModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">{% if session.user.address %}Edit{% else %}Add{% endif %} Address</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editAddressForm" action="{{ url_for('update_profile') }}" method="POST">
+                <input type="hidden" name="update_type" value="address">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ session.user.address.full_name if session.user.address else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" value="{{ session.user.address.address if session.user.address else '' }}" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" value="{{ session.user.address.city if session.user.address else '' }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" value="{{ session.user.address.country if session.user.address else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ session.user.address.phone if session.user.address else '' }}" required>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn secondary-btn cancel-edit">Cancel</button>
+                    <button type="submit" class="btn primary-btn save-address">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-section {
+        padding: 8rem 2rem 4rem;
+    }
+    
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .profile-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+    }
+    
+    .user-info {
+        background-color: var(--light-gray);
+        padding: 2rem;
+        border-radius: 8px;
+        align-self: start;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .user-info h2 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .detail-group h3 {
+        font-size: 0.875rem;
+        color: var(--dark-gray);
+        margin-bottom: 0.25rem;
+    }
+    
+    .detail-value {
+        font-size: 1.125rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .edit-btn, .add-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--light-gray);
+        border: 1px solid var(--medium-gray);
+        color: var(--dark-gray);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .edit-btn:hover, .add-btn:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .edit-btn .material-icons, .add-btn .material-icons {
+        font-size: 18px;
+    }
+    
+    .muted-text {
+        color: var(--dark-gray);
+        font-style: italic;
+        font-weight: normal;
+    }
+    
+    .order-history h2 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .order-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+    
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        background: none;
+        border: 1px solid var(--medium-gray);
+        border-radius: 50px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: var(--transition-fast);
+    }
+    
+    .tab-btn.active {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .order-card {
+        background-color: var(--light-gray);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .order-id {
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+    
+    .order-date {
+        color: var(--dark-gray);
+    }
+    
+    .order-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+    
+    .order-status.pending {
+        background-color: #fff8e1;
+        color: #ffa000;
+    }
+    
+    .order-status.processing {
+        background-color: #e3f2fd;
+        color: #1976d2;
+    }
+    
+    .order-status.shipped {
+        background-color: #e0f7fa;
+        color: #00acc1;
+    }
+    
+    .order-status.delivered {
+        background-color: #e8f5e9;
+        color: #43a047;
+    }
+    
+    .order-items {
+        margin-top: 1rem;
+    }
+    
+    .order-item {
+        display: grid;
+        grid-template-columns: 60px 1fr auto;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .order-item:last-child {
+        border-bottom: none;
+    }
+    
+    .order-item-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .order-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .order-item-details h4 {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .order-item-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: var(--dark-gray);
+    }
+    
+    .order-item-total {
+        font-weight: 600;
+        align-self: center;
+    }
+    
+    .order-total {
+        text-align: right;
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+    
+    .no-orders {
+        text-align: center;
+        padding: 3rem;
+        background-color: var(--light-gray);
+        border-radius: 8px;
+    }
+    
+    .no-orders p {
+        margin-bottom: 1.5rem;
+        font-size: 1.125rem;
+    }
+    
+    .order-tracking {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--medium-gray);
+    }
+    
+    .order-tracking h4 {
+        margin-bottom: 1rem;
+    }
+    
+    .tracking-steps {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .tracking-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+    }
+    
+    .tracking-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 24px;
+        width: 100%;
+        height: 2px;
+        background-color: var(--medium-gray);
+        z-index: 1;
+        left: 50%;
+    }
+    
+    .tracking-step.completed:not(:last-child)::after,
+    .tracking-step.active:not(:last-child)::after {
+        background-color: #34c759;
+    }
+    
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--medium-gray);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .tracking-step.completed .step-icon,
+    .tracking-step.active .step-icon {
+        background-color: #34c759;
+        color: white;
+    }
+    
+    .step-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Modal Styles */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .modal-content {
+        background-color: var(--secondary-color);
+        border-radius: 8px;
+        padding: 2rem;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+    }
+    
+    .modal.active .modal-content {
+        transform: translateY(0);
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-title {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+    
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark-gray);
+    }
+    
+    .modal-footer {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .user-info {
+            position: static;
+        }
+        
+        .tracking-steps {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .tracking-step:not(:last-child)::after {
+            width: 2px;
+            height: 100%;
+            top: 50%;
+            left: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Filter orders by status when clicking tabs
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const orderCards = document.querySelectorAll('.order-card');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active tab
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const status = button.dataset.tab;
+                
+                // Show/hide orders based on status
+                orderCards.forEach(card => {
+                    if (status === 'all' || card.dataset.status === status) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Edit Name Modal
+        const editNameBtn = document.getElementById('editNameBtn');
+        const editNameModal = document.getElementById('editNameModal');
+        const closeNameModalBtns = editNameModal.querySelectorAll('.close-modal, .cancel-edit');
+        
+        editNameBtn.addEventListener('click', () => {
+            editNameModal.classList.add('active');
+        });
+        
+        closeNameModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editNameModal.classList.remove('active');
+            });
+        });
+        
+        // Edit Address Modal
+        const editAddressBtn = document.getElementById('editAddressBtn');
+        const addAddressBtn = document.getElementById('addAddressBtn');
+        const editAddressModal = document.getElementById('editAddressModal');
+        const closeAddressModalBtns = editAddressModal.querySelectorAll('.close-modal, .cancel-edit');
+        
+        if (editAddressBtn) {
+            editAddressBtn.addEventListener('click', () => {
+                editAddressModal.classList.add('active');
+            });
+        }
+        
+        if (addAddressBtn) {
+            addAddressBtn.addEventListener('click', () => {
+                editAddressModal.classList.add('active');
+            });
+        }
+        
+        closeAddressModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editAddressModal.classList.remove('active');
+            });
+        });
+        
+        // Close modal when clicking outside 
+        window.addEventListener('click', (event) => {
+            if (event.target === editNameModal) {
+                editNameModal.classList.remove('active');
+            }
+            if (event.target === editAddressModal) {
+                editAddressModal.classList.remove('active');
+            }
+        });
+    });
+</script>
+{% endblock %} 

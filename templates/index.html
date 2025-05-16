@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Steal Store - Modern Minimalist Shop{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">BOLD.<br>MINIMAL.<br>TIMELESS.</h1>
+        <p class="hero-subtitle">Discover our curated collection of premium minimalist products.</p>
+        <div class="hero-cta">
+            <a href="/products" class="btn primary-btn">Shop Now</a>
+            <a href="#featured" class="btn secondary-btn">Explore</a>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <p>Scroll Down</p>
+        <span class="material-icons">keyboard_arrow_down</span>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section id="featured" class="featured-products">
+    <div class="section-header">
+        <h2>Featured Products</h2>
+        <p>Handpicked selections from our collection</p>
+    </div>
+    <div class="products-grid">
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ url_for('static', filename='images/product1.jpeg') }}" alt="Premium Black Jacket">
+            </div>
+            <div class="product-info">
+                <h3>Premium Black Jacket</h3>
+                <p class="price">$199.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ url_for('static', filename='images/Nike-shoe-16.jpg') }}" alt="Minimalist Watch">
+            </div>
+            <div class="product-info">
+                <h3>Nike Jordan 162</h3>
+                <p class="price">$149.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ url_for('static', filename='images/man-TShert1.jpg') }}" alt="Designer Sunglasses">
+            </div>
+            <div class="product-info">
+                <h3>Man Tshert</h3>
+                <p class="price">$89.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image">
+                <img src="{{ url_for('static', filename='images/Girl-Tshert-12.jpg') }}" alt="Premium Sneakers">
+            </div>
+            <div class="product-info">
+                <h3>Girl Wear</h3>
+                <p class="price">$129.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+    <div class="view-all">
+        <a href="/products" class="btn primary-btn">View All Products</a>
+    </div>
+</section>
+
+<!-- Brand Philosophy Section -->
+<section class="brand-philosophy">
+    <div class="philosophy-content">
+        <h2>Our Philosophy</h2>
+        <p>At Steal Store, we believe in the power of minimalism. Our carefully curated collection embodies simplicity, quality, and timeless design. Every product tells a story of craftsmanship and attention to detail.</p>
+    </div>
+    <div class="philosophy-image">
+        <img src="{{ url_for('static', filename='Icon/bio-phli.jpg') }}" alt="Brand Philosophy">
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter">
+    <div class="newsletter-content">
+        <h2>Stay Updated</h2>
+        <p>Subscribe to our newsletter for exclusive offers and updates.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Your Email Address" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %} 

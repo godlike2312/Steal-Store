@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Orders - Steal Store Admin{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Manage Orders</h1>
+        </div>
+        
+        <div class="dashboard-table">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id[:8] if order.id is string else order.id }}</td>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                {% if order.items is defined and order.items is not callable %}
+                                    {{ order.items|length }}
+                                {% elif order.items is callable %}
+                                    1 <!-- Fallback for dictionary method -->
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </td>
+                            <td>${{ "%.2f"|format(order.total) }}</td>
+                            <td>
+                                <span class="status-badge {{ order.status }}">{{ order.status }}</span>
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="action-btn">
+                                        <span class="material-icons">visibility</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn secondary-btn">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

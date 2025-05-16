@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Debug Images - Steal Store{% endblock %}
+
+{% block content %}
+<div style="padding: 100px 20px 40px;">
+    <h1>Debug Images</h1>
+    <p>Found {{ count }} image files in static/images folder</p>
+    
+    <h2>Raw Image Paths</h2>
+    <ul>
+        {% for path in image_files %}
+        <li>{{ path }}</li>
+        {% endfor %}
+    </ul>
+    
+    <h2>Processed Products ({{ products|length }})</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        {% for product in products %}
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+            <h3>{{ product.name }}</h3>
+            <p>ID: {{ product.id }}</p>
+            <p>Category: {{ product.category }}</p>
+            <p>Price: ${{ "%.2f"|format(product.price) }}</p>
+            <p>Image path: {{ product.image }}</p>
+            <img src="{{ product.image }}" style="max-width: 100%; height: 200px; object-fit: cover;" alt="{{ product.name }}">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

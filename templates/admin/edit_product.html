@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Steal Store Admin{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Edit Product</h1>
+        </div>
+        
+        <div class="admin-form">
+            <form method="POST" action="{{ url_for('admin_edit_product', product_id=product.id) }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Price ($)</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="clothing" {% if product.category == 'clothing' %}selected{% endif %}>Clothing</option>
+                            <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessories</option>
+                            <option value="footwear" {% if product.category == 'footwear' %}selected{% endif %}>Footwear</option>
+                            <option value="electronics" {% if product.category == 'electronics' %}selected{% endif %}>Electronics</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" id="stock" name="stock" min="0" value="{{ product.stock }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Image URL</label>
+                    <input type="text" id="image" name="image" value="{{ product.image }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="5" required>{{ product.description }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Image Preview</label>
+                    <div class="image-preview">
+                        <img src="{{ product.image }}" alt="{{ product.name }}">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn secondary-btn" onclick="window.location.href='{{ url_for('admin_products') }}'">Cancel</button>
+                    <button type="submit" class="btn primary-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        max-width: 300px;
+        margin-top: 0.5rem;
+        border: 1px solid var(--medium-gray);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .image-preview img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>
+{% endblock %} 

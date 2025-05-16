@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Steal Store{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+    <div class="checkout-container">
+        <div class="checkout-form-container">
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+            </div>
+            
+            <form class="checkout-form" id="checkoutForm" method="POST" action="{{ url_for('checkout') }}">
+                <input type="hidden" name="cart_data" id="cartData">
+                <input type="hidden" name="total" id="cartTotal">
+                
+                <h2>Shipping Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ session.user.address.full_name if session.user.address else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" value="{{ session.user.address.address if session.user.address else '' }}" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" value="{{ session.user.address.city if session.user.address else '' }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country" value="{{ session.user.address.country if session.user.address else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ session.user.address.phone if session.user.address else '' }}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="instructions">Special Instructions (optional)</label>
+                    <textarea id="instructions" name="instructions" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="save_address" name="save_address" value="yes" {% if not session.user.address %}checked{% endif %}>
+                    <label for="save_address">Save this address for future orders</label>
+                </div>
+                
+                <h2>Payment Method</h2>
+                <div class="payment-options">
+                    <div class="payment-option">
+                        <input type="radio" id="cash_on_delivery" name="payment_method" value="Cash on Delivery" checked>
+                        <label for="cash_on_delivery">Cash on Delivery</label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{{ url_for('cart') }}" class="btn secondary-btn">Back to Cart</a>
+                    <button type="submit" class="btn primary-btn place-order-btn">Place Order</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="checkout-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-items" id="summaryItems">
+                <!-- Summary items will be inserted here by JavaScript -->
+            </div>
+            
+            <div class="summary-totals">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="summarySubtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span id="summaryShipping">$0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="summaryTotal">$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-section {
+        padding: 8rem 2rem 4rem;
+    }
+    
+    .checkout-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+    
+    .checkout-header {
+        margin-bottom: 2rem;
+    }
+    
+    .checkout-form-container {
+        background-color: var(--light-gray);
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    
+    .checkout-form h2 {
+        margin: 2rem 0 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .checkout-form h2:first-of-type {
+        margin-top: 0;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .form-group.checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-group.checkbox-group input[type="checkbox"] {
+        width: auto;
+    }
+    
+    .form-group.checkbox-group label {
+        margin-bottom: 0;
+    }
+    
+    .payment-options {
+        margin-bottom: 2rem;
+    }
+    
+    .payment-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .payment-option input[type="radio"] {
+        width: auto;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+    
+    .checkout-summary {
+        background-color: var(--light-gray);
+        padding: 2rem;
+        border-radius: 8px;
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+    
+    .checkout-summary h2 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .summary-items {
+        margin-bottom: 1.5rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .summary-item {
+        display: flex;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+    
+    .summary-item-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-right: 1rem;
+    }
+    
+    .summary-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .summary-item-details {
+        flex-grow: 1;
+    }
+    
+    .summary-item-name {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    
+    .summary-item-price {
+        color: var(--dark-gray);
+        font-size: 0.875rem;
+    }
+    
+    .summary-item-quantity {
+        font-size: 0.875rem;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    
+    .summary-row.total {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--medium-gray);
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+    
+    .place-order-btn {
+        padding: 0.875rem 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .checkout-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .checkout-summary {
+            position: static;
+            margin-top: 2rem;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get cart data from localStorage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Update hidden form fields
+        const cartDataInput = document.getElementById('cartData');
+        const cartTotalInput = document.getElementById('cartTotal');
+        
+        if (cart.length === 0) {
+            // Redirect to cart page if cart is empty
+            window.location.href = '{{ url_for("cart") }}';
+            return;
+        }
+        
+        // Calculate totals
+        let subtotal = 0;
+        const shipping = 0; // Free shipping for now
+        
+        cart.forEach(item => {
+            subtotal += item.price * item.quantity;
+        });
+        
+        const total = subtotal + shipping;
+        
+        // Update hidden form values
+        cartDataInput.value = JSON.stringify(cart);
+        cartTotalInput.value = total.toFixed(2);
+        
+        // Render the order summary
+        const summaryItemsContainer = document.getElementById('summaryItems');
+        const summarySubtotal = document.getElementById('summarySubtotal');
+        const summaryShipping = document.getElementById('summaryShipping');
+        const summaryTotal = document.getElementById('summaryTotal');
+        
+        // Render items
+        let summaryHTML = '';
+        
+        cart.forEach(item => {
+            summaryHTML += `
+                <div class="summary-item">
+                    <div class="summary-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="summary-item-details">
+                        <div class="summary-item-name">${item.name}</div>
+                        <div class="summary-item-price">$${item.price.toFixed(2)}</div>
+                        <div class="summary-item-quantity">Quantity: ${item.quantity}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        summaryItemsContainer.innerHTML = summaryHTML;
+        
+        // Update totals in the summary
+        summarySubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        summaryShipping.textContent = `$${shipping.toFixed(2)}`;
+        summaryTotal.textContent = `$${total.toFixed(2)}`;
+        
+        // Form submission handler
+        const checkoutForm = document.getElementById('checkoutForm');
+        
+        checkoutForm.addEventListener('submit', (event) => {
+            // Show a loading state or animation if needed
+            document.querySelector('.place-order-btn').textContent = 'Processing...';
+        });
+        
+        // Animation for checkout section
+        gsap.from('.checkout-container > *', {
+            opacity: 0,
+            y: 20,
+            stagger: 0.2,
+            duration: 0.6,
+            ease: 'power3.out',
+            delay: 0.3
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Steal Store{% endblock %}
+
+{% block content %}
+<div class="admin-section">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Admin Dashboard</h1>
+            <div class="admin-notifications">
+                <span class="material-icons notification-icon">notifications</span>
+                <span class="notification-badge">{{ pending_orders }}</span>
+                <div class="notification-dropdown">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <span>{{ pending_orders }} new</span>
+                    </div>
+                    <div class="notification-list">
+                        {% for order in orders %}
+                            {% if order.status == 'pending' %}
+                                <div class="notification-item">
+                                    <div class="notification-title">New Order #{{ order.id[:8] }}</div>
+                                    <div class="notification-text">{{ order.user_name }} placed an order: ${{ "%.2f"|format(order.total) }}</div>
+                                    <div class="notification-time">{{ order.created_at }}</div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-cards">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <span class="material-icons">payments</span>
+                </div>
+                <div class="card-content">
+                    <h3>Total Sales</h3>
+                    <div class="card-value">${{ "%.2f"|format(total_sales) }}</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <span class="material-icons">shopping_bag</span>
+                </div>
+                <div class="card-content">
+                    <h3>Pending Orders</h3>
+                    <div class="card-value">{{ pending_orders }}</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <span class="material-icons">people</span>
+                </div>
+                <div class="card-content">
+                    <h3>Total Users</h3>
+                    <div class="card-value">{{ total_users }}</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <span class="material-icons">local_shipping</span>
+                </div>
+                <div class="card-content">
+                    <h3>Live Orders</h3>
+                    <div class="card-value">{{ live_orders }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-table">
+            <div class="tab-header">
+                <h2 class="tab-title active" data-tab="recent">Recent Orders</h2>
+                <h2 class="tab-title" data-tab="live">Live Orders</h2>
+            </div>
+            
+            <div class="tab-content" id="recent-orders-tab">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>#{{ order.id[:8] }}</td>
+                                <td>{{ order.user_name }}</td>
+                                <td>{{ order.created_at }}</td>
+                                <td>${{ "%.2f"|format(order.total) }}</td>
+                                <td>
+                                    <span class="status-badge {{ order.status }}">{{ order.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="action-btn">
+                                            <span class="material-icons">visibility</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="tab-content" id="live-orders-tab" style="display:none;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in live_orders_list %}
+                            <tr>
+                                <td>#{{ order.id[:8] }}</td>
+                                <td>{{ order.user_name }}</td>
+                                <td>{{ order.created_at|date }}</td>
+                                <td>${{ "%.2f"|format(order.total) }}</td>
+                                <td>
+                                    <span class="status-badge {{ order.status }}">{{ order.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="action-btn">
+                                            <span class="material-icons">visibility</span>
+                                        </a>
+                                        <form action="{{ url_for('update_order_status') }}" method="post" class="quick-status-update">
+                                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                                            <select name="status" class="mini-status-select" onchange="this.form.submit()">
+                                                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                                                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+                                                <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                                                <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                                <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                {% if not live_orders_list %}
+                    <div class="no-live-orders">
+                        <p>No live orders at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="admin-actions">
+            <a href="{{ url_for('admin_orders') }}" class="btn primary-btn">View All Orders</a>
+            <a href="{{ url_for('admin_products') }}" class="btn primary-btn">Manage Products</a>
+            <a href="{{ url_for('admin_users') }}" class="btn primary-btn">Manage Users</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Fetch new notifications every 30 seconds
+        setInterval(() => {
+            fetch('/api/get-notifications')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.notification-badge');
+                    if (badge) {
+                        badge.textContent = data.new_orders_count;
+                    }
+                })
+                .catch(error => console.error('Error fetching notifications:', error));
+        }, 30000);
+    });
+</script>
+{% endblock %} 

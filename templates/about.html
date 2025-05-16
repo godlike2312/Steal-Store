@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Steal Store{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="about-header">
+        <div class="container">
+            <h1>About Steal Store</h1>
+            <p class="subtitle">Modern designs. Timeless quality.</p>
+        </div>
+    </div>
+    
+    <div class="about-content container">
+        <div class="about-story">
+            <h2>Our Story</h2>
+            <p>
+                Steal Store was founded with a simple vision: to provide high-quality products at affordable prices without 
+                compromising on style or sustainability. We believe that everyone deserves access to premium fashion and lifestyle products 
+                that don't break the bank.
+            </p>
+            <p>
+                Our carefully curated collection embodies simplicity, quality, and timeless design. Every product tells a story of 
+                craftsmanship and attention to detail. We work directly with manufacturers to eliminate middlemen and pass the savings to you.
+            </p>
+        </div>
+        
+        <div class="about-values">
+            <h2>Our Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <span class="material-icons">verified</span>
+                    <h3>Quality</h3>
+                    <p>We never compromise on quality. Every product is rigorously tested to ensure it meets our standards.</p>
+                </div>
+                <div class="value-card">
+                    <span class="material-icons">eco</span>
+                    <h3>Sustainability</h3>
+                    <p>We're committed to reducing our environmental impact through sustainable practices and materials.</p>
+                </div>
+                <div class="value-card">
+                    <span class="material-icons">accessibility</span>
+                    <h3>Inclusivity</h3>
+                    <p>We design products for everyone, regardless of age, size, or background.</p>
+                </div>
+                <div class="value-card">
+                    <span class="material-icons">volunteer_activism</span>
+                    <h3>Community</h3>
+                    <p>We give back to the communities we serve through various outreach programs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="how-to-order">
+        <div class="container">
+            <h2>How to Order</h2>
+            <p class="section-intro">Follow these simple steps to place an order with Steal Store:</p>
+            
+            <div class="order-steps">
+                <div class="order-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Browse Products</h3>
+                        <p>Explore our collection of products across various categories. Use filters to narrow down your search by category, price range, or other criteria.</p>
+                        <img src="{{ url_for('static', filename='guid-img/Browse-products.jpg') }}" alt="Browse Products" class="step-image">
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add to Cart</h3>
+                        <p>When you find a product you like, click "Add to Cart". You can adjust quantities or remove items from your cart later.</p>
+                        <img src="{{ url_for('static', filename='guid-img/cart.jpg') }}" alt="Add to Cart" class="step-image">
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Checkout</h3>
+                        <p>Review your cart and click "Checkout" to proceed. If you haven't already, you'll need to create an account or log in.</p>
+                        <!-- <img src="{{ url_for('static', filename='images/about/checkout.jpg') }}" alt="Checkout" class="step-image"> -->
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Enter Shipping Information</h3>
+                        <p>Provide your shipping address and contact details. Your information will be saved for future orders if you choose.</p>
+                        <!-- <img src="{{ url_for('static', filename='images/about/shipping.jpg') }}" alt="Shipping Information" class="step-image"> -->
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Select Payment Method</h3>
+                        <p>Choose your preferred payment method. We currently offer Cash on Delivery.</p>
+                        <!-- <img src="{{ url_for('static', filename='images/about/payment.jpg') }}" alt="Payment Method" class="step-image"> -->
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h3>Place Order</h3>
+                        <p>Review your order details and click "Place Order" to confirm. You'll receive an order confirmation with tracking information.</p>
+                        <!-- <img src="{{ url_for('static', filename='images/about/confirm.jpg') }}" alt="Place Order" class="step-image"> -->
+                    </div>
+                </div>
+                
+                <div class="order-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h3>Track Your Order</h3>
+                        <p>You can track your order's status in your account profile under "Order History".</p>
+                        <!-- <img src="{{ url_for('static', filename='images/about/track.jpg') }}" alt="Track Order" class="step-image"> -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-cta">
+                <h3>Ready to start shopping?</h3>
+                <a href="{{ url_for('products') }}" class="btn primary-btn">Browse Products</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-section {
+        padding-top: 5rem;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    .about-header {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        padding: 6rem 0 4rem;
+        text-align: center;
+    }
+    
+    .about-header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .subtitle {
+        font-size: 1.25rem;
+        opacity: 0.9;
+    }
+    
+    .about-content {
+        padding: 4rem 0;
+    }
+    
+    .about-story {
+        margin-bottom: 4rem;
+    }
+    
+    .about-story h2,
+    .about-values h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .about-story h2:after,
+    .about-values h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background-color: var(--primary-color);
+    }
+    
+    .about-story p {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        max-width: 800px;
+    }
+    
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .value-card {
+        background-color: var(--light-gray);
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .value-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .value-card .material-icons {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+    }
+    
+    .value-card h3 {
+        margin-bottom: 1rem;
+    }
+    
+    .value-card p {
+        color: var(--dark-gray);
+    }
+    
+    .how-to-order {
+        background-color: var(--light-gray);
+        padding: 5rem 0;
+    }
+    
+    .how-to-order h2 {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .section-intro {
+        text-align: center;
+        margin-bottom: 3rem;
+        font-size: 1.125rem;
+        color: var(--dark-gray);
+    }
+    
+    .order-steps {
+        margin-bottom: 4rem;
+    }
+    
+    .order-step {
+        display: flex;
+        margin-bottom: 3rem;
+        gap: 2rem;
+        align-items: flex-start;
+    }
+    
+    .step-number {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .step-content {
+        flex: 1;
+    }
+    
+    .step-content h3 {
+        margin-bottom: 0.75rem;
+    }
+    
+    .step-content p {
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+    
+    .step-image {
+        width: 100%;
+        max-width: 600px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-cta {
+        text-align: center;
+        margin-top: 4rem;
+    }
+    
+    .order-cta h3 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .order-cta .btn {
+        padding: 1rem 2rem;
+        font-size: 1.125rem;
+    }
+    
+    @media (max-width: 768px) {
+        .about-header h1 {
+            font-size: 2.5rem;
+        }
+        
+        .values-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .order-step {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .step-number {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Animate elements on scroll
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animate value cards
+        gsap.from('.value-card', {
+            opacity: 0,
+            y: 50,
+            stagger: 0.2,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '.values-grid',
+                start: 'top 80%',
+            }
+        });
+        
+        // Animate order steps
+        gsap.from('.order-step', {
+            opacity: 0,
+            x: -50,
+            stagger: 0.3,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '.order-steps',
+                start: 'top 80%',
+            }
+        });
+    });
+</script>
+{% endblock %} 

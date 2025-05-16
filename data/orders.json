@@ -1,0 +1,210 @@
+[
+  {
+    "id": "bd881bbe-04e3-44c5-8fb7-8e56ecf036ee",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "world",
+    "items": [
+      {
+        "id": 1,
+        "name": "Premium Black Jacket",
+        "price": 199.99,
+        "image": "static/images/product1.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 199.99,
+    "address": {
+      "full_name": "H1ghT1eR ",
+      "address": "aADSFDSF",
+      "city": "asdasd",
+      "country": "India",
+      "phone": "8437962212",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "delivered",
+    "created_at": "2025-05-14T17:15:33.636501"
+  },
+  {
+    "id": "27ca810c-f568-4b2d-90d2-b221a8ab2ae8",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "world",
+    "items": [
+      {
+        "id": 15,
+        "name": "Nike Shoe",
+        "price": 89.99,
+        "image": "/static/images/Nike-shoe-16.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 89.99,
+    "address": {
+      "full_name": "fdsfwfsd",
+      "address": "dasdfs",
+      "city": "punjab",
+      "country": "India",
+      "phone": "+91.8437964410",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "shipped",
+    "created_at": "2025-05-15T13:27:06.215654"
+  },
+  {
+    "id": "b4576ed5-9d03-4dfb-9990-9197a2ab270a",
+    "user_email": "mayank905621@gmail.com",
+    "user_name": "godlike",
+    "items": [
+      {
+        "id": 1,
+        "name": "Adidas Shoe",
+        "price": 99.99,
+        "image": "/static/images/adidas-shoe-14.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 99.99,
+    "address": {
+      "full_name": "mayank",
+      "address": "india ASia",
+      "city": "ludhiaa",
+      "country": "london",
+      "phone": "1234567890",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "processing",
+    "created_at": "2025-05-15T14:32:22.223592"
+  },
+  {
+    "id": "6c5244e6-6e0b-4e5d-b31e-6ccd6a705610",
+    "user_email": "mayank905621@gmail.com",
+    "user_name": "godlike",
+    "items": [
+      {
+        "id": 4,
+        "name": "Apostolos Vamvouras",
+        "price": 39.989999999999995,
+        "image": "/static/images/apostolos-vamvouras-nk8nBcFZEeE-unsplash.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 39.989999999999995,
+    "address": {
+      "full_name": "mayank",
+      "address": "india ASia",
+      "city": "ludhiaa",
+      "country": "london",
+      "phone": "1234567890",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "delivered",
+    "created_at": "2025-05-15T14:33:26.378730"
+  },
+  {
+    "id": "bdb2936f-26c9-4db2-8100-53cd7b2a89ac",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "i AM Pro",
+    "items": [
+      {
+        "id": 1,
+        "name": "Adidas Shoe",
+        "price": 99.99,
+        "image": "http://127.0.0.1:5000/static/images/adidas-shoe-14.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 99.99,
+    "address": {
+      "full_name": "H1ghT1eR ",
+      "address": "dasdfs",
+      "city": "ludhiana",
+      "country": "Algeria (\u0627\u0644\u062c\u0632\u0627\u0626\u0631)",
+      "phone": "8437964410",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "processing",
+    "created_at": "2025-05-15T15:19:24.869381"
+  },
+  {
+    "id": "311f1837-90db-4fa1-bcb2-6b6f74573961",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "i AM Pro",
+    "items": [
+      {
+        "id": 1,
+        "name": "Adidas Shoe",
+        "price": 99.99,
+        "image": "http://127.0.0.1:5000/static/images/adidas-shoe-14.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 99.99,
+    "address": {
+      "full_name": "H1ghT1eR ",
+      "address": "dasdfs",
+      "city": "ludhiana",
+      "country": "Algeria (\u0627\u0644\u062c\u0632\u0627\u0626\u0631)",
+      "phone": "+91.8437964410",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "pending",
+    "created_at": "2025-05-15T15:53:57.919121"
+  },
+  {
+    "id": "e6608374-7bba-4894-b43a-faca4c957562",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "i AM Pro",
+    "items": [
+      {
+        "id": 1,
+        "name": "Adidas Shoe",
+        "price": 99.99,
+        "image": "http://127.0.0.1:5000/static/images/adidas-shoe-14.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 99.99,
+    "address": {
+      "full_name": "H1ghT1eR ",
+      "address": "dasdfs",
+      "city": "ludhiana",
+      "country": "Algeria (\u0627\u0644\u062c\u0632\u0627\u0626\u0631)",
+      "phone": "+91.8437964410",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "pending",
+    "created_at": "2025-05-15T16:05:28.510152"
+  },
+  {
+    "id": "371094c9-ed17-4406-8110-1a078b4ffb8d",
+    "user_email": "alok905621@gmail.com",
+    "user_name": "i AM Pro",
+    "items": [
+      {
+        "id": 1,
+        "name": "Adidas Shoe",
+        "price": 99.99,
+        "image": "http://127.0.0.1:5000/static/images/adidas-shoe-14.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 99.99,
+    "address": {
+      "full_name": "H1ghT1eR ",
+      "address": "dasdfs",
+      "city": "ludhiana",
+      "country": "Algeria (\u0627\u0644\u062c\u0632\u0627\u0626\u0631)",
+      "phone": "+91.8437964410",
+      "instructions": ""
+    },
+    "payment_method": "Cash on Delivery",
+    "status": "pending",
+    "created_at": "2025-05-15T16:11:02.513192"
+  }
+]

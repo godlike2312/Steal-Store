@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - Steal Store{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+    <div class="cart-header">
+        <h1>Your Shopping Cart</h1>
+    </div>
+    
+    <div class="cart-container">
+        <div class="cart-items-container">
+            <div class="cart-items">
+                <!-- This will be populated by JavaScript -->
+                <div class="empty-cart">
+                    <p>Your cart is currently empty.</p>
+                    <a href="/products" class="btn primary-btn">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span class="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span class="shipping">$0.00</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span class="total-amount">$0.00</span>
+            </div>
+            
+            <button class="checkout-btn" disabled>Proceed to Checkout</button>
+            
+            <div class="continue-shopping">
+                <a href="/products">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %} 
