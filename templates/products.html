@@ -93,7 +93,7 @@
                  data-name="{{ product.name|lower }}"
                  data-keywords="{{ product.category }} - {{ product.name|lower }}">
                 <div class="product-image">
-                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" loading="lazy" width="300" height="300">
                 </div>
                 <div class="product-info">
                     <h3>{{ product.name }}</h3>

@@ -270,8 +270,8 @@
                 });
             };
             
-            themeToggle.addEventListener('click', toggleTheme);
-            mobileThemeToggle.addEventListener('click', toggleTheme);
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+            if (mobileThemeToggle) mobileThemeToggle.addEventListener('click', toggleTheme);
             
             // Mobile navigation
             const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
@@ -279,17 +279,34 @@
             const mobileNav = document.querySelector('.mobile-nav');
             const overlay = document.querySelector('.overlay');
             
-            mobileMenuToggle.addEventListener('click', () => {
-                mobileNav.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
+            // Ensure mobile menu toggle works properly with both click and touch events
+            if (mobileMenuToggle) {
+                const openMobileNav = () => {
+                    mobileNav.classList.add('active');
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                };
+                
+                mobileMenuToggle.addEventListener('click', openMobileNav);
+                mobileMenuToggle.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    openMobileNav();
+                });
+            }
             
-            closeMobileNav.addEventListener('click', () => {
-                mobileNav.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+            if (closeMobileNav) {
+                const closeMobileNavFunc = () => {
+                    mobileNav.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                };
+                
+                closeMobileNav.addEventListener('click', closeMobileNavFunc);
+                closeMobileNav.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    closeMobileNavFunc();
+                });
+            }
             
             // Cart checkout redirection logic
             const checkoutBtn = document.getElementById('checkout-btn');
