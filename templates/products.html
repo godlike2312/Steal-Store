@@ -93,7 +93,8 @@
                  data-name="{{ product.name|lower }}"
                  data-keywords="{{ product.category }} - {{ product.name|lower }}">
                 <div class="product-image">
-                    <img src="{{ product.image }}" alt="{{ product.name }}" loading="lazy" width="300" height="300">
+                    <div class="image-placeholder"></div>
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ product.image }}" alt="{{ product.name }}" loading="lazy" width="300" height="300" class="lazy-image">
                 </div>
                 <div class="product-info">
                     <h3>{{ product.name }}</h3>
@@ -414,6 +415,51 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Implement efficient lazy loading with IntersectionObserver
+        const lazyImages = document.querySelectorAll('.lazy-image');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => {
+                            img.classList.add('loaded');
+                            const placeholder = img.previousElementSibling;
+                            if (placeholder && placeholder.classList.contains('image-placeholder')) {
+                                placeholder.style.display = 'none';
+                            }
+                        };
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '200px 0px', // Load images 200px before they appear in viewport
+                threshold: 0.01
+            });
+            
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        } else {
+            // Fallback for browsers without IntersectionObserver
+            lazyImages.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
+        
+        // Optimize scroll performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    scrollTimeout = null;
+                    // Add any scroll-dependent animations/operations here
+                }, 20);
+            }
+        }, { passive: true });
+        
         // Elements
         const productsGrid = document.querySelector('.products-grid');
         const productCards = document.querySelectorAll('.product-card');
@@ -774,16 +820,17 @@
         // Add event listeners to product cards for animations
         productCards.forEach(card => {
             card.addEventListener('mouseenter', function() {
+                // Use regular DOM manipulations instead of GSAP for better performance
                 const img = this.querySelector('.product-image img');
-                if (img) {
-                    gsap.to(img, { scale: 1.05, duration: 0.3, ease: "power1.out" });
+                if (img && img.classList.contains('loaded')) {
+                    img.style.transform = 'scale(1.05)';
                 }
             });
             
             card.addEventListener('mouseleave', function() {
                 const img = this.querySelector('.product-image img');
                 if (img) {
-                    gsap.to(img, { scale: 1, duration: 0.3, ease: "power1.out" });
+                    img.style.transform = 'scale(1)';
                 }
             });
         });
